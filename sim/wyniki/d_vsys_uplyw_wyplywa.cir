@@ -1,0 +1,8 @@
+* d) dzielnik VSYS: R51/R52/C21 z obwod.py, upływ wejścia 50 nA (dodatni = wypływa z węzła)
+V5 v5 0 PWL(0 0 100u 5.0)
+R51 v5 vs 100000
+R52 vs 0 100000
+C21 vs 0 1e-07
+Iupl vs 0 5e-08
+.tran 1u 100m 0 20u
+.end

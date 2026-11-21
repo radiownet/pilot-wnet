@@ -1,0 +1,38 @@
+# SPDX-FileCopyrightText: 2026 Radio Wnet Sp. z o.o.
+# SPDX-License-Identifier: MIT
+#
+# Licence check: every file must have copyright and licence information (REUSE.toml, SPDX
+# headers) and every licence used must have its text in LICENSES/.
+#
+# Action: https://github.com/fsfe/reuse-action, release v6.0.0 (2025-10-06; latest release when
+# checked on 2026-11-21 through the GitHub API), pinned to the commit of tag v6.0.0. It runs
+# `reuse lint` in the fsfe/reuse:6 image (REUSE Specification 3.3, REUSE.toml supported).
+
+name: REUSE lint
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: reuse-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  reuse:
+    name: reuse lint
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: REUSE compliance check
+        uses: fsfe/reuse-action@676e2d560c9a403aa252096d99fcab3e1132b0f5 # v6.0.0

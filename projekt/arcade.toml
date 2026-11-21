@@ -1,0 +1,126 @@
+# Pilot Wnet — wersja arcade (drewniana obudowa, części arcade, własna płytka ESP32).
+# Jedno źródło wymiarów dla modelu w Blenderze, rysunków do cięcia i dokumentacji. Jednostki: mm.
+# Wartości oznaczone [ROBOCZE] czekają na potwierdzenie z kart producentów (research R2/R3).
+
+wersja = "0.2"   # 0.2: wariant W1 z raportu R2 (blacha 1,5 mm + folia + pleksi), wyższa skrzynka pod joystick
+
+[obudowa]
+szerokosc = 340.0          # x
+glebokosc = 230.0          # y (od użytkownika do tyłu)
+wys_przod = 70.0           # z na przedniej krawędzi (z blatem); 0.1 → 0.2: +10 mm na luz pod joystickiem
+wys_tyl = 100.0            # z na tylnej krawędzi (z blatem) — skos blatu wynika z różnicy (ok. 7,4°)
+sciana = 12.0              # sklejka brzozowa boków, przodu i tyłu (R2: 12–15 mm)
+dno = 6.5                  # sklejka dna (WISA 6,5 mm wg listy producenta, R2 [43]); przykręcana na wkładkach M4
+material = "sklejka brzozowa"
+
+[blat]
+# Wariant W1 (R2 §7): od góry pleksi → folia z grafiką → płyta nośna z blachy (cięcie laserowe, malowanie proszkowe).
+# Przyciski zatrzaskowe Sanwa przechodzą przez cały stos: łącznie ≤ 3,7 mm (zakres z kart dystrybutorów, nie Sanwa — R2 [21][22]).
+pleksi = 1.5               # PMMA bezbarwna (R2: 1,5–2,0 mm)
+grafika = 0.1              # folia z nadrukiem
+plyta = 1.5                # stal DC01 albo aluminium 5052 1,5 mm [ROBOCZE — oferta fabryki, R1]
+material_plyty = "stal 1,5 mm malowana proszkowo (zapas: Al 5052 1,5 mm)"
+okno_oled = [34.0, 18.0]   # wycięcie w płycie i folii pod wyświetlacz (pleksi ciągła)
+
+[joystick]                 # Sanwa JLX2-TP-8YT (następca JLF-TP-8YT) lub cichy JLX2-TPML-8YT-SK, kula LB-35
+u = -92.0                  # położenie na blacie względem środka (u w prawo, v do tyłu po skosie)
+v = 0.0
+otwor = 24.0               # otwór w blacie na trzon i osłonę [DO WERYFIKACJI — brak źródła, R2 §8]
+kula = 35.0                # średnica kuli LB-35 (R2 [5])
+wys_nad = 46.9             # od blatu do środka kuli [ROBOCZE]: trzon 32,5 mm od płytki do spodu kuli (R2 [2]) − blat 3,1 + promień 17,5
+plytka_mont = [53.0, 95.0] # JLF-P1 95 × 53 × 1,6 mm [ROBOCZE — pomiar; R2 [5], sprzeczne 94 × 40 wg [11]]
+wys_pod = 62.0             # od spodu blatu do najniższego punktu [DO WERYFIKACJI — sklep podaje tylko 69 mm całości, R2 [1]]
+etykieta = "PULPITY"
+luz_min = 8.0              # wymagany luz pod korpusem (kable, wiązka JLF-H)
+mocowanie = "4 × M4 z łbem płaskim (R2 [11]); w blasze 1,5 mm zamiast stożka: trzpienie wciskane M4 albo łby pod kieszeniami w pleksi [DO WERYFIKACJI z fabryką]"
+
+[[przycisk]]
+nazwa = "REC"
+etykieta = "NAGRYWAJ"
+czesc = "Sanwa OBSC-30 przezroczysty czerwony + wkładka z ikoną"
+kolor = "#E0524A"
+srednica = 30.0
+u = 30.0
+v = 22.0
+ikona = "kolo"
+
+[[przycisk]]
+nazwa = "PLAY"
+etykieta = "GRAJ"
+czesc = "Sanwa OBSC-30 przezroczysty żółty + wkładka"
+kolor = "#F4B740"
+srednica = 30.0
+u = 72.0
+v = 22.0
+ikona = "trojkat"
+
+[[przycisk]]
+nazwa = "WYSLIJ"
+etykieta = "POLECENIE"
+czesc = "Sanwa OBSC-30 przezroczysty niebieski + wkładka"
+kolor = "#3D92C9"
+srednica = 30.0
+u = 30.0
+v = -20.0
+ikona = "koperta"
+
+[[przycisk]]
+nazwa = "SPRAWDZ"
+etykieta = "SPRAWDŹ"
+czesc = "Sanwa OBSC-30 przezroczysty zielony + wkładka"
+kolor = "#3BB47E"
+srednica = 30.0
+u = 72.0
+v = -20.0
+ikona = "ptaszek"
+
+[[przycisk]]
+nazwa = "START"
+etykieta = "START"
+czesc = "Sanwa OBSC-24 przezroczysty bezbarwny (albo OBSF-24 biały)"
+kolor = "#D7DADF"
+srednica = 24.0
+u = -20.0
+v = 70.0
+ikona = "brak"
+
+[[przycisk]]
+nazwa = "STOP"
+etykieta = "STOP"
+czesc = "Sanwa OBSF-30 czarny (cichy zamiennik: OBSFE-30)"
+kolor = "#2B2F33"
+srednica = 30.0
+u = 128.0
+v = 66.0
+ikona = "kwadrat"
+
+[przycisk_wspolne]          # Sanwa OBSC-30 / OBSF-30 / OBSC-24 (zatrzask)
+wys_nad = 3.5               # wysokość kapturka nad blatem [ROBOCZE]
+glebokosc_pod = 45.0        # luz pod blatem na korpus z mikroprzełącznikiem i konektorami (R2 §8: minimum 45 mm [ROBOCZE])
+kolnierz = 3.0              # nadwyżka kołnierza ponad średnicę otworu [ROBOCZE]
+wkladka_30 = 20.7           # średnica wkładki z ikoną w OBSC-30 (Arcade Express, R2 [24]) [ROBOCZE — pomiar]
+wkladka_24 = 20.7           # OBSC-24: sklep podaje tę samą liczbę — podejrzane [DO WERYFIKACJI pomiarem, R2 [31]]
+rozstaw_min_30 = 36.0       # minimalny rozstaw środków przycisków 30 mm (R2 §6: typowy 36–36,5)
+
+[oled]
+u = -20.0
+v = 40.0
+ekran = [30.0, 15.0]        # pole aktywne 1,3″ [ROBOCZE]
+
+[plytka]                    # własna płytka ESP32-S3 (szczegóły w pcb/)
+szer = 100.0
+gleb = 100.0
+grub = 1.6
+x = 40.0                    # środek płytki w układzie świata (x w prawo od środka obudowy)
+y = 51.0                    # w tył od środka; tylna krawędź 2 mm od wewnętrznej ściany tylnej
+dystans = 8.0               # tulejki M3 nad dnem
+
+[tyl]                       # wycięcia w tylnej ścianie (środek, mm od środka obudowy i od dna)
+usb_c = { x = 10.0, z = 17.5, w = 10.0, h = 4.5 }
+rj45 = { x = 40.0, z = 22.5, w = 17.0, h = 14.5 }
+sma = { x = 72.0, z = 15.5, d = 6.6 }
+
+[stopki]
+srednica = 20.0
+wys = 4.0
+odsuniecie = 22.0

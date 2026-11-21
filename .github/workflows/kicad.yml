@@ -1,0 +1,210 @@
+# SPDX-FileCopyrightText: 2026 Radio Wnet Sp. z o.o.
+# SPDX-License-Identifier: MIT
+#
+# ERC and DRC of the Pilot Wnet KiCad project with kicad-cli 10 (official KiCad Docker image).
+#
+# Gate (the job fails unless all of these hold):
+#   - ERC: 0 items with severity "error";
+#   - DRC (with --schematic-parity --refill-zones, as in pcb/v01/ses_v01.cmd):
+#     0 items with severity "error", 0 unconnected_items and 0 schematic_parity items,
+#     whatever severity the project file gives them (parity checks are "warning" in
+#     pcb/kicad/pilot_wnet.kicad_pro, so a severity filter alone would let them pass).
+# Other warnings are reported but do not fail the job; a change against the known Rev A warnings
+# (KiCad 10.0.8, 2026-11-20, pcb/wyniki/*.json: DRC 21 x lib_footprint_mismatch = solder paste
+# removed from DNP pads on purpose; ERC 6 x lib_symbol_mismatch = flattened derived symbols)
+# is flagged as a warning annotation for review.
+#
+# Image: kicad/kicad:10.0.8 on Docker Hub, https://hub.docker.com/r/kicad/kicad/tags?name=10.0
+# (tag pushed 2026-10-30; checked 2026-11-21 through the Docker Hub API; the same KiCad version
+# that produced the committed reports). Pinned by the digest of that tag's index:
+#   docker buildx imagetools inspect kicad/kicad:10.0.8
+#
+# Permissions: the image runs as user "kicad" (uid 1000), with its library tables in
+# /home/kicad/.config/kicad/10.0, while the runner checks out the repository as another uid.
+# The container gets pcb/ read-only, copies it to its own /tmp (kicad-cli needs a writable
+# project directory) and writes the reports into a world-writable directory on the runner.
+#
+# kicad-cli reference: https://docs.kicad.org/10.0/en/cli/cli.html
+# (--exit-code-violations: exit code 0 = no violations, 5 = violations found). The docs do not
+# say whether --severity-error limits the exit code; the gate also counts the JSON report. If a
+# run ever ends with exit code 5 while the JSON report is clean, drop the exit-code condition.
+
+name: KiCad ERC/DRC
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: kicad-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KICAD_IMAGE: kicad/kicad:10.0.8@sha256:3f4a01786dfbe803a65f345c3342b765db9add913f5e9448f8356793714ddc34
+
+jobs:
+  erc-drc:
+    name: ERC + DRC (kicad-cli 10)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Prepare a writable report directory
+        run: |
+          RAPORTY="$RUNNER_TEMP/kicad-raporty"
+          mkdir -p "$RAPORTY"
+          chmod 0777 "$RAPORTY"
+          echo "RAPORTY=$RAPORTY" >> "$GITHUB_ENV"
+
+      - name: Pull the KiCad image
+        run: docker pull "$KICAD_IMAGE"
+
+      - name: Run ERC and DRC in the container
+        run: |
+          cat > "$RUNNER_TEMP/erc_drc.sh" <<'SKRYPT'
+          set -u
+          kicad-cli version | tee /raporty/kicad-cli-version.txt
+
+          # Writable copy of the project; fp-lib-table and sym-lib-table point to ${KIPRJMOD}/../lib.
+          mkdir -p /tmp/praca
+          cp -r /repo/pcb/kicad /repo/pcb/lib /tmp/praca/ || exit 1
+          cd /tmp/praca/kicad || exit 1
+
+          # Full reports (all severities) for the gate and the artefact, then an errors-only run
+          # for the exit code.
+          kicad-cli sch erc --severity-all --format json -o /raporty/erc.json pilot_wnet.kicad_sch
+          kicad-cli sch erc --severity-all --format report -o /raporty/erc.rpt pilot_wnet.kicad_sch
+          kicad-cli sch erc --severity-error --exit-code-violations -o /raporty/erc_bledy.rpt pilot_wnet.kicad_sch
+          echo $? > /raporty/erc.rc
+
+          DRC_OPCJE="--schematic-parity --refill-zones"
+          kicad-cli pcb drc $DRC_OPCJE --severity-all --format json -o /raporty/drc.json pilot_wnet.kicad_pcb
+          kicad-cli pcb drc $DRC_OPCJE --severity-all --format report -o /raporty/drc.rpt pilot_wnet.kicad_pcb
+          kicad-cli pcb drc $DRC_OPCJE --severity-error --exit-code-violations -o /raporty/drc_bledy.rpt pilot_wnet.kicad_pcb
+          echo $? > /raporty/drc.rc
+          exit 0
+          SKRYPT
+          chmod 0644 "$RUNNER_TEMP/erc_drc.sh"
+          docker run --rm --network none --entrypoint bash \
+            -v "$RUNNER_TEMP/erc_drc.sh:/erc_drc.sh:ro" \
+            -v "$GITHUB_WORKSPACE/pcb:/repo/pcb:ro" \
+            -v "$RAPORTY:/raporty" \
+            "$KICAD_IMAGE" /erc_drc.sh
+
+      - name: Evaluate the reports (gate)
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          from collections import Counter
+
+          out = os.environ["RAPORTY"]
+          # Known warnings of Rev A (pcb/wyniki/*.json, KiCad 10.0.8, 2026-11-20).
+          known_warnings = {
+              "ERC": Counter({"lib_symbol_mismatch": 6}),
+              "DRC": Counter({"lib_footprint_mismatch": 21}),
+          }
+          lines = [
+              "## KiCad ERC/DRC",
+              "",
+              "| Check | Exit code (errors only) | Errors | Unconnected | Schematic parity | Warnings | By type |",
+              "|---|---|---|---|---|---|---|",
+          ]
+          failed = False
+
+
+          def read_rc(name):
+              try:
+                  with open(os.path.join(out, name), encoding="utf-8") as f:
+                      return int(f.read().strip())
+              except (OSError, ValueError):
+                  return None
+
+
+          checks = [
+              ("ERC", "erc.json", "erc.rc"),
+              ("DRC", "drc.json", "drc.rc"),
+          ]
+          for label, report, rc_file in checks:
+              rc = read_rc(rc_file)
+              path = os.path.join(out, report)
+              if not os.path.exists(path):
+                  print(f"::error title={label}::{report} is missing - kicad-cli could not load the project")
+                  lines.append(f"| {label} | {rc} | report missing | - | - | - | - |")
+                  failed = True
+                  continue
+              with open(path, encoding="utf-8") as f:
+                  data = json.load(f)
+
+              items = []
+              for key in ("violations", "unconnected_items", "schematic_parity"):
+                  items += [(key, v) for v in data.get(key, []) if isinstance(v, dict)]
+              for sheet in data.get("sheets", []):  # ERC groups violations per sheet
+                  items += [("violations", v) for v in sheet.get("violations", []) if isinstance(v, dict)]
+
+              severities = Counter(v.get("severity", "?") for _, v in items)
+              by_type = Counter(f'{v.get("type", k)} ({v.get("severity", "?")})' for k, v in items)
+              errors = severities.get("error", 0)
+              unconnected = len(data.get("unconnected_items", []))
+              parity = len(data.get("schematic_parity", []))
+
+              for k, v in items:
+                  if v.get("severity") == "error" or k in ("unconnected_items", "schematic_parity"):
+                      print(f'::error title={label} {v.get("type", k)}::{v.get("description", "")}')
+
+              if errors or unconnected or parity:
+                  failed = True
+              if rc != 0:
+                  failed = True
+                  if rc not in (0, 5):
+                      print(f"::error title={label}::kicad-cli exit code {rc} (0 = clean, 5 = violations, other = failure)")
+                  elif not (errors or unconnected or parity):
+                      print(f"::error title={label}::exit code 5 from the errors-only run, but the JSON report has no "
+                            "gating items - see the note on --severity-error at the top of this workflow")
+
+              warnings = Counter(
+                  v.get("type", k) for k, v in items
+                  if v.get("severity") == "warning" and k == "violations"
+              )
+              if warnings != known_warnings[label]:
+                  print(f"::warning title={label} warnings changed::now {dict(warnings)}, "
+                        f"known at Rev A {dict(known_warnings[label])} - explain the difference in the pull request")
+
+              types = ", ".join(f"{t}: {n}" for t, n in sorted(by_type.items())) or "none"
+              version = data.get("kicad_version", "?")
+              lines.append(
+                  f"| {label} (KiCad {version}) | {rc} | {errors} | {unconnected} | {parity} | "
+                  f"{severities.get('warning', 0)} | {types} |"
+              )
+
+          lines += [
+              "",
+              "Gate: ERC 0 errors; DRC 0 errors, 0 unconnected items, 0 schematic-parity items "
+              "(any severity); exit code 0 from the `--severity-error --exit-code-violations` runs.",
+              "Known warnings at Rev A: DRC 21 x lib_footprint_mismatch (paste removed from DNP pads on purpose), "
+              "ERC 6 x lib_symbol_mismatch.",
+          ]
+          text = "\n".join(lines) + "\n"
+          print(text)
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as f:
+              f.write(text)
+          raise SystemExit(1 if failed else 0)
+          PY
+
+      - name: Upload the reports
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: kicad-erc-drc-${{ github.sha }}
+          path: ${{ runner.temp }}/kicad-raporty/
+          if-no-files-found: warn
+          retention-days: 30

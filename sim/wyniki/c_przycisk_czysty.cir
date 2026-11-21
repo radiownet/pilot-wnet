@@ -1,0 +1,12 @@
+* c) wejście przycisku: czyste wciśnięcie 2 ms
+Vdd vdd 0 3.3
+Rpod vdd gp 10000
+Rszer zl gp 1000
+Cf gp 0 1e-08
+Cin gp 0 2e-12
+* przycisk: przełącznik sterowany napięciem (1 V = zwarty), 0,1 Ω / 1 TΩ
+Sp zl 0 ster 0 styk
+.model styk sw(vt=0.5 vh=0.01 ron=0.1 roff=1e12)
+Vster ster 0 PWL(0 0 0.001 0 0.00100001 1 0.003 1 0.00300001 0)
+.tran 0.1u 0.0045 0 0.5u
+.end

@@ -1,0 +1,23 @@
+# Wyniki odtwarzalne skryptami (fab.py, v01/eksport_v01.py) — poza repozytorium (decyzja zespołu projektu 12.11.2026).
+# Zostają: źródła KiCad, biblioteka lib/ (bez modelu 3D E22 — licencja nieustalona) i raporty wyniki/drc.json, wyniki/erc.json.
+kicad/~*.lck
+wyniki/3d/
+wyniki/sch_svg/
+wyniki/jlcpcb/
+__pycache__/
+# Lokalne i pośrednie pliki KiCada, Freeroutingu i KiKit (pliki wykluczone przy publikacji: docs/AUDYT_REV_A.md)
+*.lck
+*.kicad_prl
+kicad/*.dsn
+kicad/*.ses
+kicad/pilot_wnet_panel.*
+kicad/*-backups/
+kicad/fp-info-cache
+kicad/#auto_saved_files#
+kicad/_autosave-*
+# Model 3D E22 z EasyEDA/LCSC (pobierany lokalnie easyeda2kicad; licencja nieustalona — nie dołączać)
+lib/pilot_jlc.3dshapes/
+# Narzędzia pobierane lokalnie (Freerouting JAR, JRE) i katalogi robocze
+narzedzia/
+kicad_proba/
+wyniki/v01*/

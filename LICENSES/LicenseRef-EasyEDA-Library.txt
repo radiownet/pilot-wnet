@@ -1,0 +1,17 @@
+LicenseRef-EasyEDA-Library
+
+This marker applies to library data for the Ebyte E22-900M22S LoRa module (LCSC part
+C411293): its schematic symbol and PCB footprint, and the copies of them embedded in the
+KiCad schematic, board and netlist of this project (part U6).
+
+The symbol and footprint come from the EasyEDA/LCSC component library. They were converted
+to KiCad format with the easyeda2kicad tool and then edited (pin types, 3D model path).
+
+The terms under which this library data may be redistributed have not been established.
+It is therefore NOT covered by the licences of this project (CERN-OHL-S-2.0, MIT,
+CC-BY-SA-4.0) and no licence to it is granted here. It is included solely so that the
+KiCad project in this repository can be opened, checked (ERC/DRC) and reviewed.
+
+The E22-900M22S symbol and footprint will be redrawn from the Ebyte datasheet in Rev B and
+will then be published under the hardware licence of this project. The E22 3D model is not
+included in this repository.

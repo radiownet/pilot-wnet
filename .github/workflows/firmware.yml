@@ -1,0 +1,77 @@
+# SPDX-FileCopyrightText: 2026 Radio Wnet Sp. z o.o.
+# SPDX-License-Identifier: MIT
+#
+# Firmware tests in CPython, no hardware: every firmware/micropython/testy/test_*.py runs on its
+# own (a loop, not a glob passed to one interpreter). MicroPython modules are mocked in
+# testy/atrapy.py; the tests use the standard library only. test_konfig_plytki.py also reads
+# pcb/obwod.py (the GPIO table must agree with the circuit).
+# The mocks show only that the code calls the APIs with the right pins and arguments; the
+# firmware has not been run on a real board.
+
+name: Firmware tests (CPython)
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: firmware-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  testy:
+    name: CPython ${{ matrix.python }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.11", "3.13"]
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Run every test file
+        working-directory: firmware/micropython
+        shell: bash
+        env:
+          PYTHON_LABEL: ${{ matrix.python }}
+        run: |
+          set -u
+          shopt -s nullglob
+          testy=(testy/test_*.py)
+          if [ "${#testy[@]}" -eq 0 ]; then
+            echo "::error::no test files found in firmware/micropython/testy"
+            exit 1
+          fi
+          python --version
+          nieudane=0
+          for t in "${testy[@]}"; do
+            echo "::group::$t"
+            if python -I -B -X utf8 "$t"; then
+              echo "OK: $t"
+            else
+              echo "::error file=firmware/micropython/$t::test file failed: $t"
+              nieudane=$((nieudane + 1))
+            fi
+            echo "::endgroup::"
+          done
+          echo "Failed test files: $nieudane of ${#testy[@]}"
+          {
+            echo "## Firmware tests (CPython $PYTHON_LABEL)"
+            echo ""
+            echo "Failed test files: $nieudane of ${#testy[@]}"
+          } >> "$GITHUB_STEP_SUMMARY"
+          test "$nieudane" -eq 0

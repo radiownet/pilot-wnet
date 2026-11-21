@@ -1,0 +1,128 @@
+{
+    "$schema": "https://schemas.kicad.org/erc.v1.json",
+    "coordinate_units": "mm",
+    "date": "2026-11-20T13:07:14",
+    "ignored_checks": [
+        {
+            "description": "Global label only appears once in the schematic",
+            "key": "single_global_label"
+        },
+        {
+            "description": "Four connection points are joined together",
+            "key": "four_way_junction"
+        },
+        {
+            "description": "SPICE model issue",
+            "key": "simulation_model_issue"
+        },
+        {
+            "description": "Assigned footprint doesn't match footprint filters",
+            "key": "footprint_filter"
+        }
+    ],
+    "included_severities": [
+        "error",
+        "warning",
+        "exclusion"
+    ],
+    "kicad_version": "10.0.8",
+    "sheets": [
+        {
+            "path": "/",
+            "uuid_path": "/fc3ecc84-271a-5017-aeff-c7fc34cfaaff",
+            "violations": [
+                {
+                    "description": "Symbol 'AO3400A' nie odpowiada jego kopii w bibliotece 'Transistor_FET'",
+                    "items": [
+                        {
+                            "description": "Symbol Q1 [AO3400A]",
+                            "pos": {
+                                "x": 833.12,
+                                "y": 314.96
+                            },
+                            "uuid": "ffe9b543-1aab-5210-adbd-81c7d061baef"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_mismatch"
+                },
+                {
+                    "description": "Symbol 'AO3400A' nie odpowiada jego kopii w bibliotece 'Transistor_FET'",
+                    "items": [
+                        {
+                            "description": "Symbol Q2 [AO3400A]",
+                            "pos": {
+                                "x": 876.3,
+                                "y": 314.96
+                            },
+                            "uuid": "85102f3b-5f40-5c10-a2c7-04bc87e0e81f"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_mismatch"
+                },
+                {
+                    "description": "Symbol 'AO3400A' nie odpowiada jego kopii w bibliotece 'Transistor_FET'",
+                    "items": [
+                        {
+                            "description": "Symbol Q3 [AO3400A]",
+                            "pos": {
+                                "x": 922.02,
+                                "y": 314.96
+                            },
+                            "uuid": "8f530ff2-69c1-531e-9ca4-cc75353f8dfd"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_mismatch"
+                },
+                {
+                    "description": "Symbol 'AO3400A' nie odpowiada jego kopii w bibliotece 'Transistor_FET'",
+                    "items": [
+                        {
+                            "description": "Symbol Q4 [AO3400A]",
+                            "pos": {
+                                "x": 965.2,
+                                "y": 314.96
+                            },
+                            "uuid": "a183336b-d889-5f4c-b74e-6bfff5ae7e82"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_mismatch"
+                },
+                {
+                    "description": "Symbol 'AO3400A' nie odpowiada jego kopii w bibliotece 'Transistor_FET'",
+                    "items": [
+                        {
+                            "description": "Symbol Q5 [AO3400A]",
+                            "pos": {
+                                "x": 1010.92,
+                                "y": 314.96
+                            },
+                            "uuid": "f3c80b2a-873b-54f8-bed7-d832fcd9c8e5"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_mismatch"
+                },
+                {
+                    "description": "Symbol 'AO3400A' nie odpowiada jego kopii w bibliotece 'Transistor_FET'",
+                    "items": [
+                        {
+                            "description": "Symbol Q6 [AO3400A]",
+                            "pos": {
+                                "x": 1054.1,
+                                "y": 314.96
+                            },
+                            "uuid": "aaddb360-c800-5a1a-b575-d0b3f8fa8f15"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_mismatch"
+                }
+            ]
+        }
+    ],
+    "source": "pilot_wnet.kicad_sch"
+}

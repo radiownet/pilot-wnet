@@ -1,0 +1,8 @@
+* b) RSTn W5500: R61/C39 z obwod.py + RPU wewnętrzny, Tr = 0.5 ms
+Vdd vdd 0 PWL(0 0 0.0005 3.3)
+R61 vdd rst 10000
+Rpu vdd rst 77000
+C39 rst 0 1e-06
+Iupl 0 rst 0
+.tran 3.125e-07 0.0536034483 0 1.25e-06
+.end

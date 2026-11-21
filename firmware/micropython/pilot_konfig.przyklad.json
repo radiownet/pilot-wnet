@@ -1,0 +1,38 @@
+{
+  "wersja": 1,
+  "dev_id": 1,
+  "klucz_hmac_hex": "",
+  "transporty": ["usb_hid"],
+  "stabilnosc_ms": 5,
+  "heartbeat_ms": 1000,
+  "limit_ramek_na_s": 40,
+  "watchdog_ms": 0,
+  "usb": {"produkt": "Pilot Wnet", "producent": "Radio Wnet"},
+  "eth": {
+    "wlaczony": false,
+    "tryb": "dhcp",
+    "adres": "",
+    "maska": "255.255.255.0",
+    "brama": "",
+    "dns": "",
+    "dhcp_czekaj_ms": 8000,
+    "link_local": true,
+    "mac": ""
+  },
+  "udp": {"host": "", "port": 47231, "port_lokalny": 47231},
+  "wifi": {"wlaczone": false, "ssid": "", "haslo": ""},
+  "ble": {"nazwa": "Pilot Wnet"},
+  "lora": {
+    "wlaczona": false,
+    "freq_khz": 869525,
+    "bw": "125",
+    "sf": 9,
+    "coding_rate": 5,
+    "output_power": 14,
+    "preamble_len": 8,
+    "zysk_anteny_dbi": 3.0,
+    "straty_db": 0.0,
+    "zapas_db": 1.0,
+    "tcxo_mv": null
+  }
+}

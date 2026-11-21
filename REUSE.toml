@@ -1,0 +1,158 @@
+# SPDX-FileCopyrightText: 2026 Radio Wnet Sp. z o.o.
+# SPDX-License-Identifier: CC0-1.0
+#
+# REUSE.toml for Pilot Wnet (open hardware).
+# Specification: https://reuse.software/spec-3.3/ (REUSE.toml, version = 1); checked with `reuse lint`.
+#
+# Rule: inside one REUSE.toml the LAST matching [[annotations]] table wins.
+# General defaults come first, documentation next, then single files and third-party material.
+# Licence texts are in LICENSES/ (they need no entry here). Human-readable summary: NOTICE.md.
+version = 1
+
+# 1. Hardware design: KiCad project, project library, netlist, BOMs, ERC/DRC reports,
+#    enclosure geometry, the scripts that generate the design (pcb/obwod.py, pcb/plytka.py,
+#    pcb/v01/*.py ...) and their CSV/JSON data.
+[[annotations]]
+path = ["pcb/**", "projekt/**"]
+precedence = "closest"
+SPDX-FileCopyrightText = "2026 Radio Wnet Sp. z o.o."
+SPDX-License-Identifier = "CERN-OHL-S-2.0"
+
+# 2. Software: MicroPython firmware and tests, MeshCore helper files, draft mesh CI,
+#    SPICE tests and decks, Blender generator, GitHub workflows.
+[[annotations]]
+path = [
+  "firmware/micropython/**",
+  "firmware/meshcore/**",
+  "firmware/ci/**",
+  "sim/**",
+  "blender/**",
+  ".github/workflows/**",
+]
+precedence = "closest"
+SPDX-FileCopyrightText = "2026 Radio Wnet Sp. z o.o."
+SPDX-License-Identifier = "MIT"
+
+# 3. Meshtastic board variant: derived from variants/esp32s3/t-eth-elite of
+#    https://github.com/meshtastic/firmware (GPL-3.0); the file headers list the changes.
+[[annotations]]
+path = "firmware/meshtastic/**"
+precedence = "override"
+SPDX-FileCopyrightText = [
+  "Meshtastic contributors <https://github.com/meshtastic/firmware>",
+  "2026 Radio Wnet Sp. z o.o. (modifications)",
+]
+SPDX-License-Identifier = "GPL-3.0-only"
+
+# 4. Documentation (all README files, docs/, research/, decisions, ordering notes,
+#    contribution guide, notice, GitHub templates).
+[[annotations]]
+path = [
+  "docs/**",
+  "research/**",
+  "zamowienie/**",
+  "DECYZJE.md",
+  "README*.md",
+  "**/README*.md",
+  "CONTRIBUTING.md",
+  "NOTICE.md",
+  ".github/*.md",
+  ".github/ISSUE_TEMPLATE/**",
+]
+precedence = "closest"
+SPDX-FileCopyrightText = "2026 Radio Wnet Sp. z o.o."
+SPDX-License-Identifier = "CC-BY-SA-4.0"
+
+# 5. Repository housekeeping.
+[[annotations]]
+path = [".gitignore", "**/.gitignore"]
+precedence = "closest"
+SPDX-FileCopyrightText = "2026 Radio Wnet Sp. z o.o."
+SPDX-License-Identifier = "CC0-1.0"
+
+# 6. Top-level documents that quote other parties' copyright lines or SPDX tags in their
+#    text: only the information below applies to them.
+[[annotations]]
+path = ["README.md", "README.pl.md", "CONTRIBUTING.md", "NOTICE.md"]
+precedence = "override"
+SPDX-FileCopyrightText = "2026 Radio Wnet Sp. z o.o."
+SPDX-License-Identifier = "CC-BY-SA-4.0"
+
+# 7. Developer Certificate of Origin 1.1: verbatim copying only (LICENSES/LicenseRef-DCO.txt).
+[[annotations]]
+path = "DCO.txt"
+precedence = "override"
+SPDX-FileCopyrightText = "2004, 2006 The Linux Foundation and its contributors"
+SPDX-License-Identifier = "LicenseRef-DCO"
+
+# ---------------------------------------------------------------- third-party material
+
+# 8. MeshCore build environment: derived from the [LilyGo_TETH_Elite_sx1262] section of
+#    variants/lilygo_teth_elite/platformio.ini in https://github.com/meshcore-dev/MeshCore (MIT).
+#    The original author's notice is kept here and in the file header.
+[[annotations]]
+path = "firmware/meshcore/platformio_pilot_wnet.ini"
+precedence = "override"
+SPDX-FileCopyrightText = [
+  "2025 Scott Powell / rippleradios.com",
+  "2026 Radio Wnet Sp. z o.o. (modifications)",
+]
+SPDX-License-Identifier = "MIT"
+
+# 9. USB HID: PilotHID.desc_cfg adapts HIDInterface.desc_cfg from the micropython-lib
+#    package usb-device-hid (MIT).
+[[annotations]]
+path = "firmware/micropython/lib/pilot_hid.py"
+precedence = "override"
+SPDX-FileCopyrightText = [
+  "2023 Angus Gratton (micropython-lib usb-device-hid, adapted desc_cfg)",
+  "2026 Radio Wnet Sp. z o.o.",
+]
+SPDX-License-Identifier = "MIT"
+
+# 10. Footprints derived from the official KiCad libraries and redistributed as library
+#     files: they keep CC-BY-SA-4.0 with the KiCad libraries exception.
+#     ESP32-S3-WROOM-1_Pilot  <- RF_Module:ESP32-S3-WROOM-1
+#     USB_C_..._Pilot         <- Connector_USB:USB_C_Receptacle_HRO_TYPE-C-31-M-12
+[[annotations]]
+path = [
+  "pcb/lib/pilot_jlc.pretty/ESP32-S3-WROOM-1_Pilot.kicad_mod",
+  "pcb/lib/pilot_jlc.pretty/USB_C_Receptacle_HRO_TYPE-C-31-M-12_Pilot.kicad_mod",
+]
+precedence = "override"
+SPDX-FileCopyrightText = [
+  "KiCad Libraries Team <https://gitlab.com/kicad/libraries/kicad-footprints>",
+  "2026 Radio Wnet Sp. z o.o. (modifications)",
+]
+SPDX-License-Identifier = "CC-BY-SA-4.0 WITH KiCad-libraries-exception"
+
+# 11. Ebyte E22-900M22S symbol and footprint converted with easyeda2kicad from the
+#     EasyEDA/LCSC component library (LCSC part C411293). Redistribution terms are not
+#     established (LICENSES/LicenseRef-EasyEDA-Library.txt); both are to be redrawn from
+#     the Ebyte datasheet in Rev B. The E22 3D model is not included in this repository.
+[[annotations]]
+path = [
+  "pcb/lib/pilot_jlc.kicad_sym",
+  "pcb/lib/pilot_jlc.pretty/WIRELM-SMD_E22-900M22S.kicad_mod",
+]
+precedence = "override"
+SPDX-FileCopyrightText = [
+  "EasyEDA / LCSC component library (original authors unknown)",
+  "2026 Radio Wnet Sp. z o.o. (modifications)",
+]
+SPDX-License-Identifier = "LicenseRef-EasyEDA-Library"
+
+# 12. Board, schematic and netlist: our design, with embedded copies of the E22 symbol
+#     and footprint from item 11 (part U6).
+[[annotations]]
+path = [
+  "pcb/kicad/pilot_wnet.kicad_pcb",
+  "pcb/kicad/pilot_wnet.kicad_sch",
+  "pcb/kicad/pilot_wnet.net",
+]
+precedence = "override"
+SPDX-FileCopyrightText = [
+  "2026 Radio Wnet Sp. z o.o.",
+  "EasyEDA / LCSC component library (embedded E22-900M22S symbol and footprint)",
+]
+SPDX-License-Identifier = "CERN-OHL-S-2.0 AND LicenseRef-EasyEDA-Library"

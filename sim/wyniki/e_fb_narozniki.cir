@@ -1,0 +1,48 @@
+* e) dzielnik FB TLV62569: R3/R4 z obwod.py, idealny wzmacniacz błędu, kopii: 9
+Vr0 ref0 0 0.6
+E0 out0 0 ref0 fb0 1e6
+R3_0 out0 fb0 100000
+R4_0 fb0 0 22000
+Rl0 out0 0 10
+Vr1 ref1 0 0.588
+E1 out1 0 ref1 fb1 1e6
+R3_1 out1 fb1 99000
+R4_1 fb1 0 21780
+Rl1 out1 0 10
+Vr2 ref2 0 0.612
+E2 out2 0 ref2 fb2 1e6
+R3_2 out2 fb2 99000
+R4_2 fb2 0 21780
+Rl2 out2 0 10
+Vr3 ref3 0 0.588
+E3 out3 0 ref3 fb3 1e6
+R3_3 out3 fb3 99000
+R4_3 fb3 0 22220
+Rl3 out3 0 10
+Vr4 ref4 0 0.612
+E4 out4 0 ref4 fb4 1e6
+R3_4 out4 fb4 99000
+R4_4 fb4 0 22220
+Rl4 out4 0 10
+Vr5 ref5 0 0.588
+E5 out5 0 ref5 fb5 1e6
+R3_5 out5 fb5 101000
+R4_5 fb5 0 21780
+Rl5 out5 0 10
+Vr6 ref6 0 0.612
+E6 out6 0 ref6 fb6 1e6
+R3_6 out6 fb6 101000
+R4_6 fb6 0 21780
+Rl6 out6 0 10
+Vr7 ref7 0 0.588
+E7 out7 0 ref7 fb7 1e6
+R3_7 out7 fb7 101000
+R4_7 fb7 0 22220
+Rl7 out7 0 10
+Vr8 ref8 0 0.612
+E8 out8 0 ref8 fb8 1e6
+R3_8 out8 fb8 101000
+R4_8 fb8 0 22220
+Rl8 out8 0 10
+.op
+.end

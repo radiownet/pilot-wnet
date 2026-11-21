@@ -1,0 +1,6 @@
+# przebiegi ngspice (dziesiątki MB) i dzienniki odtwarza uruchomienie testów; decki .cir i wyniki.json zostają do przeglądu
+wyniki/*.raw
+wyniki/*.log
+wyniki/*bisekcja*.cir
+wyniki/c_impuls_*.cir
+__pycache__/

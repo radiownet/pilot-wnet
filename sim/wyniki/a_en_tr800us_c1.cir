@@ -1,0 +1,13 @@
+* a) EN ESP32-S3: R5/C7 z obwod.py, rampa 3V3 Tr = 0.8 ms, C x 1
+Vdd vdd 0 PWL(0 0 0.0008 3.3)
+R5 vdd en 10000
+C7 en 0 1e-06
+Cin en 0 2e-12
+Iupl 0 en 5e-08
+* GPIO3 (STOP): podciąganie f'R{20 + i}' i kondensator f'C{10 + i}' z pętli wejść, przycisk zwolniony
+Rpod vdd g3 10000
+Cf g3 0 1e-08
+Rszer g3 zl3 1000
+Rotw zl3 0 1e12
+.tran 5e-07 0.0808 0 2e-06
+.end

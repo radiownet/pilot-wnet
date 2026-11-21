@@ -1,0 +1,5 @@
+(version 1)
+# Pilot Wnet Rev A — reguły uzupełniające (możliwości JLCPCB 2 warstwy; strefy GND)
+(rule "jedno_zebro_termiczne"
+  (condition "A.Type == 'Zone'")
+  (constraint min_resolved_spokes 1))

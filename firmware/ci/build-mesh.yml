@@ -1,0 +1,114 @@
+# Szkic GitHub Actions: budowa firmware mesh dla płytki Pilot Wnet Rev A (Meshtastic + MeshCore).
+# NIEURUCHAMIANY i nieumieszczony w .github/workflows — przeniesienie tam to decyzja człowieka (HITL).
+# Źródła przypięte do commitów z dnia pobrania wariantów (18.10.2026); aktualizacja = świadoma zmiana SHA
+# i ponowne porównanie variant.h z t-eth-elite. Wynik: pliki .bin jako artefakty, bez publikacji i bez
+# wgrywania na płytkę.
+name: build-mesh-pilot-wnet
+
+on:
+  workflow_dispatch: {}
+  push:
+    paths:
+      - "firmware/meshtastic/**"
+      - "firmware/meshcore/**"
+      - "firmware/ci/build-mesh.yml"
+      - ".github/workflows/build-mesh.yml"
+
+permissions:
+  contents: read
+
+env:
+  MESHTASTIC_SHA: fad52bba0db68aff926aa02a55f4d2c4989f68dd   # meshtastic/firmware develop, 18.10.2026
+  MESHCORE_SHA: 81dbae592ffad40b4212bc0b37e82b38da08f4bc     # meshcore-dev/MeshCore main, 18.10.2026
+  PLATFORMIO_VERSION: "6.1.18"                               # [DO WERYFIKACJI] aktualna wersja na PyPI
+
+jobs:
+  meshtastic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Repozytorium pilota
+        uses: actions/checkout@v4
+        with:
+          path: pilot
+      - name: Meshtastic firmware (przypięty commit)
+        uses: actions/checkout@v4
+        with:
+          repository: meshtastic/firmware
+          ref: ${{ env.MESHTASTIC_SHA }}
+          path: meshtastic
+          submodules: recursive
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Pamięć podręczna PlatformIO
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.platformio
+            ~/.cache/pip
+          key: pio-meshtastic-${{ env.MESHTASTIC_SHA }}-${{ env.PLATFORMIO_VERSION }}
+          restore-keys: pio-meshtastic-
+      - name: PlatformIO
+        run: pip install "platformio==${PLATFORMIO_VERSION}"
+      - name: Wariant pilot_wnet
+        run: |
+          mkdir -p meshtastic/variants/esp32s3/diy/pilot_wnet
+          cp pilot/firmware/meshtastic/variants/esp32s3/diy/pilot_wnet/* \
+             meshtastic/variants/esp32s3/diy/pilot_wnet/
+      - name: Budowa
+        working-directory: meshtastic
+        run: pio run -e pilot_wnet
+      - uses: actions/upload-artifact@v4
+        with:
+          name: meshtastic-pilot_wnet
+          path: meshtastic/.pio/build/pilot_wnet/*.bin
+          if-no-files-found: error
+
+  meshcore:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      matrix:
+        # ZAKAZ: nie dodawać tu PilotWnet_sx1262_repeater. Hasło administratora z PILOT_MC_ADMIN_HASLO
+        # zostaje wkompilowane w plik .bin, a artefakt CI z publicznego repozytorium może pobrać każdy
+        # zalogowany użytkownik GitHuba. Przekaźnik budować wyłącznie lokalnie, bez wysyłania artefaktu.
+        env_pio: [PilotWnet_sx1262_companion_radio_usb]   # repeater wymaga sekretu PILOT_MC_ADMIN_HASLO
+    steps:
+      - name: Repozytorium pilota
+        uses: actions/checkout@v4
+        with:
+          path: pilot
+      - name: MeshCore (przypięty commit)
+        uses: actions/checkout@v4
+        with:
+          repository: meshcore-dev/MeshCore
+          ref: ${{ env.MESHCORE_SHA }}
+          path: meshcore
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Pamięć podręczna PlatformIO
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.platformio
+            ~/.cache/pip
+          key: pio-meshcore-${{ env.MESHCORE_SHA }}-${{ env.PLATFORMIO_VERSION }}
+          restore-keys: pio-meshcore-
+      - name: PlatformIO
+        run: pip install "platformio==${PLATFORMIO_VERSION}"
+      - name: Środowisko pilot_wnet
+        run: |
+          mkdir -p meshcore/variants/pilot_wnet
+          cp pilot/firmware/meshcore/platformio_pilot_wnet.ini \
+             meshcore/variants/pilot_wnet/platformio.ini
+          cp pilot/firmware/meshcore/wymagaj_hasla.py meshcore/variants/pilot_wnet/
+      - name: Budowa
+        working-directory: meshcore
+        run: pio run -e ${{ matrix.env_pio }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: meshcore-${{ matrix.env_pio }}
+          path: meshcore/.pio/build/${{ matrix.env_pio }}/*.bin
+          if-no-files-found: error

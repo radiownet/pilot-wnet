@@ -1,0 +1,4 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "pilot_jlc")(type "KiCad")(uri "${KIPRJMOD}/../lib/pilot_jlc.pretty")(options "")(descr "Pilot Wnet: biblioteka mieszana: 2 footprinty pochodne z biblioteki KiCada (ESP32-S3-WROOM-1, USB-C HRO TYPE-C-31-M-12) + E22-900M22S z EasyEDA/LCSC"))
+)
