@@ -11,6 +11,10 @@ English: [README.md](README.md)
 > [!IMPORTANT]
 > **Projekt wygenerowany przy udziale SI, bez przeglądu inżyniera.** Schemat i płytkę Rev A wygenerowały skrypty w Pythonie (z użyciem SKiDL, Freeroutingu i własnego routera), które napisali i uruchamiali agenci SI (Claude). ERC i DRC pokazują 0 błędów, ale projektu nie przejrzał żaden inżynier elektronik. Zob. [Jak powstał projekt](#jak-powstał-projekt).
 
+![Render płytki Pilot Wnet Rev A: moduł ESP32-S3, kontroler Ethernet W5500, gniazda RJ45 i USB-C, złącza JST XH przycisków](docs/img/pilot-wnet-rev-a-render.jpg)
+
+*Render, **nie zdjęcie**: płytka Rev A nie została jeszcze wyprodukowana. Wykonał go agent SI (Claude) w Blenderze (Cycles) z plików KiCad z tego repozytorium. Gniazda USB-C i RJ45 oraz przyciski to modele przybliżone, oznaczenia części są uproszczone, a elementów niemontowanych (DNP) nie pokazano. Inne ujęcia: [z góry](docs/img/pilot-wnet-rev-a-render-top.jpg), [zbliżenie modułu ESP32-S3](docs/img/pilot-wnet-rev-a-render-esp32.jpg).*
+
 ## Czym jest Pilot Wnet
 
 Pilot Wnet to fizyczny pilot (sterownik) do studia radiowego. Powstał w polskim radiu Radio Wnet (Radio Wnet Sp. z o.o.) i jest publikowany jako otwarty sprzęt (open hardware). Realizator wciska duże przyciski arcade albo porusza joystickiem, a pilot wysyła do komputera studyjnego podpisane ramki ze stanem wejść. Oprogramowanie na komputerze zamienia je na akcje.
@@ -100,7 +104,7 @@ Rev B ma być krokiem, w którym prowadzenie przejmują ludzie: ponowne trasowan
 | `blender/` | generator modelu 3D i renderów obudowy (Blender w trybie wsadowym; wyników i grafiki blatu nie ma w repozytorium) |
 | `zamowienie/` | instrukcja zamówienia Rev A (tylko informacyjnie: Rev A nie zamawiać) |
 | `research/` | raporty R1, R2, R3 i R5 (opracowanie SI, źródła z datą sprawdzenia; R4 nie wchodzi do repozytorium) |
-| `docs/` | protokół ramki i sesji (`ESP32_PROTOKOL.md`), opis sprzętu (`SPRZET.md`), streszczenie audytu (`AUDYT_REV_A.md`) |
+| `docs/` | protokół ramki i sesji (`ESP32_PROTOKOL.md`), opis sprzętu (`SPRZET.md`), streszczenie audytu (`AUDYT_REV_A.md`), rendery płytki Rev A (`img/`) |
 | `DECYZJE.md` | rejestr decyzji D1–D11 |
 | `LICENSES/`, `REUSE.toml`, `NOTICE.md` | teksty licencji, licencje poszczególnych plików (REUSE) i informacje o materiałach osób trzecich |
 | `.github/` | workflow CI, szablony zgłoszeń i pull requestów |
