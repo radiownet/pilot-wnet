@@ -170,6 +170,8 @@ Wyjątki:
 
 Licencja każdego pliku jest zapisana w formacie [REUSE](https://reuse.software/) (`LICENSES/`, `REUSE.toml`); sprawdza ją `reuse lint`, także w CI ([.github/workflows/reuse.yml](.github/workflows/reuse.yml)). Informacje o materiałach osób trzecich: [NOTICE.md](NOTICE.md). CERN-OHL-S jest licencją silnie wzajemną: kto przekazuje innym (sprzedaje, rozdaje) płytki zrobione według zmienionego projektu albo sam zmieniony projekt, musi udostępnić odbiorcom pełne źródła na tej samej licencji.
 
+Lokalizacja źródeł (Source Location, CERN-OHL-S, pkt 4): <https://github.com/radiownet/pilot-wnet>. Rev A nie ma jej jeszcze na sitodruku; Rev B będzie miała.
+
 ## Radio i bezpieczeństwo
 
 - Pilot Wnet jest urządzeniem radiowym: ESP32-S3 ma Wi-Fi i Bluetooth LE, a moduł E22 nadaje LoRa w paśmie 868 MHz. **Zgodności z dyrektywą RED ani oznakowania CE nie oceniano.** Moduł ESP32-S3 ma ocenę radiową producenta, ale to nie czyni zgodnym całego urządzenia.

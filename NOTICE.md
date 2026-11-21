@@ -29,7 +29,7 @@ You may redistribute and modify this source and make products using it under the
 
 This source is distributed WITHOUT ANY EXPRESS OR IMPLIED WARRANTY, INCLUDING OF MERCHANTABILITY, SATISFACTORY QUALITY AND FITNESS FOR A PARTICULAR PURPOSE. Please see the CERN-OHL-S v2 for applicable conditions.
 
-Source Location: <SOURCE-LOCATION-URL — to be filled in before publication>
+Source Location: https://github.com/radiownet/pilot-wnet
 
 As per CERN-OHL-S v2 section 4, should You produce hardware based on this source, You must where practicable maintain the Source Location visible on the PCB silkscreen or on the enclosure of the Pilot Wnet or other products you make using this source.
 

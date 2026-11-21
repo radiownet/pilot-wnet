@@ -170,6 +170,8 @@ Exceptions:
 
 The licence of every file is declared in the [REUSE](https://reuse.software/) format (`LICENSES/`, `REUSE.toml`); `reuse lint` checks it, also in CI ([.github/workflows/reuse.yml](.github/workflows/reuse.yml)). Third-party notices: [NOTICE.md](NOTICE.md). CERN-OHL-S is strongly reciprocal: if you convey (sell or give away) hardware made from a modified design, or the modified design itself, you must make the complete source available to the recipients under the same licence.
 
+Source Location (CERN-OHL-S, section 4): <https://github.com/radiownet/pilot-wnet>. Rev A does not carry it on the silkscreen yet; Rev B will.
+
 ## Radio and safety notice
 
 - Pilot Wnet is radio equipment: the ESP32-S3 has Wi-Fi and Bluetooth LE, and the E22 module transmits LoRa at 868 MHz. **Conformity with the Radio Equipment Directive (RED) and CE marking have not been assessed.** The ESP32-S3 module has the manufacturer's radio assessment; that does not make the finished device compliant.
